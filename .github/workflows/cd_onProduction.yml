@@ -1,0 +1,27 @@
+name: Production
+
+on:
+  push:
+    branches: ["test"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Clearing
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_IP_PRODUCTION }}
+          username: ${{ secrets.HOST_USERNAME_PRODUCTION }}
+          key: ${{ secrets.SSH_KEY_PRODUCTION }}
+          script: |
+            cd /home/${{ secrets.HOST_USERNAME_PRODUCTION }}
+            rm -rf proj
